@@ -11,6 +11,8 @@ int N = 2, R = 10, K = 1;
 
 //Função executada por cada thread
 void *process(void *vargp){
+    int *thread_num = (int*)vargp;
+    char thread_str = *thread_num + '0';
     for(int i = 0; i<R; i++){
         int network_socket, estado = 1;
         network_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -30,6 +32,16 @@ void *process(void *vargp){
 
         //Receber dados do servidor 
         int server_response;
+        char mensagem[10] = {"1", "|", thread_str, "|"};
+        int len = sizeof(mensagem);
+        for(int i = len; i <10; i++){
+            if(i = 9){
+                mensagem[i] = "\0";
+            }else{
+                mensagem[i] = "0";
+            }
+        }
+        send(network_socket, &mensagem, sizeof(mensagem), 0);
         // while(estado == 1){
         //     recv(network_socket, &server_response, sizeof(server_response), 0);
         //     if(testePrimo(server_response) == 1 && server_response != 0){
@@ -51,7 +63,7 @@ int main(){
     pthread_t thread_id[N]; //cria identificador do tipo pthread_t
     printf("Before Thread\n");
     for(int j = 0; j < N; j++){
-        pthread_create(&(thread_id[j]), NULL, process, NULL); //criação da thread
+        pthread_create(&(thread_id[j]), NULL, process, &j); //criação da thread
     }
     for(int j = 0; j < 5; j++){ 
         pthread_join(thread_id[j], NULL); //aqui a thread espera a filha

@@ -5,12 +5,15 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h> 
+#include <string.h>
+
 
 int portCoord1 = 9004, portCoord2 = 9005, portCoord3 = 9006;
+char *fila[];
 
 //Thread 1 - Coordenador que recebe concexão dos processos
 void *coord1(void *vargp){
-    int server_message = 0;
+    char server_message[10];
     //Criando o socket do servidor
     int server_socket;
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -28,6 +31,9 @@ void *coord1(void *vargp){
     
     int client_socket;
     client_socket = accept(server_socket, NULL, NULL);
+    recv(client_socket, &server_message, sizeof(server_message), 0);
+    char *mensagem[] = strtok(server_message, "|");
+    *mensagem = strtok(NULL, "|");
     // for (int i = 0; i < qntdNum; i++){
     //     send(client_socket, &randomNum, sizeof(i), 0);
     //     randomNum = somaN(randomNum, delta);
