@@ -9,7 +9,7 @@
 
 
 int portCoord1 = 9004, portCoord2 = 9005, portCoord3 = 9006;
-char *fila[];
+char fila[];
 
 //Thread 1 - Coordenador que recebe concexão dos processos
 void *coord1(void *vargp){
